@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 
 void main() {
-  runApp(EvaVPN());
+  runApp(const EvaVPN());
 }
 
 class EvaVPN extends StatelessWidget {
@@ -17,7 +18,7 @@ class EvaVPN extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: Linking(),
+      home: const Linking(),
     );
   }
 }
@@ -37,7 +38,12 @@ class Linking extends StatelessWidget {
 
   Future<void> _generateIdAndLaunchTelegram() async {
     try {
-      final response = await http.get(Uri.parse(apiAuthUrl));
+      print(Uri.parse(apiAuthUrl));
+      final response = await http.post(
+        Uri.parse(apiAuthUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'action': 'generate'}),
+      );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
